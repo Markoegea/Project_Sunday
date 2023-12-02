@@ -1,0 +1,40 @@
+[
+    {
+        "name": "Print Value",
+        "api_name": "print_screen",
+        "description": "Print the given input in the screen, given anything as a paramater",
+        "parameters":  [
+            {"name": "value", "description": "The value to be printed in the screen"}
+        ]
+    },
+    {
+        "name": "Send Email",
+        "api_name": "email.send",
+        "description": "Send an email to the specified recipient with a subject, body, and optional attachments",
+        "parameters": [
+            {"name": "recipient", "description": "Email address of the recipient"},
+            {"name": "subject", "description": "Subject of the email"},
+            {"name": "body", "description": "Body/content of the email"},
+            {"name": "attachments", "description": "Optional attachments to include in the email (optional)"}
+        ]
+    },
+    {
+        "name": "Create Calendar Event",
+        "api_name": "calendar.event.create",
+        "description": "Create a new event in the user's calendar with specified details",
+        "parameters": [
+            {"name": "title", "description": "Title/Name of the event"},
+            {"name": "start_time", "description": "Start time of the event"},
+            {"name": "end_time", "description": "End time of the event"},
+            {"name": "location", "description": "Location of the event (optional)"}
+        ]
+    },
+    {
+        "name": "Create a folder",
+        "api_name": "create_html_folder",
+        "description": "Create a new folder in the system with the given name.",
+        "parameters": [
+            {"name": "folder_name", "description": "The name of the folder"}
+        ]
+    }
+]

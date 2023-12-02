@@ -1,0 +1,24 @@
+# Byte-compiled / optimized files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+.venv/
+.env/
+flagged/
+
+# IDE files
+.idea/
+.vscode/
+
+# Logs and data files
+*.log
+*.csv
+*.xlsx
+
+# Compiled Python files
+*.pyc
+
+# OS generated files
+.DS_Store
+Thumbs.db
