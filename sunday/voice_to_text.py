@@ -1,41 +1,17 @@
 import wave
-import pyaudio
+import librosa
 import numpy as np
-from queue import Queue
-from threading import Thread
 from transformers import WhisperProcessor, WhisperForConditionalGeneration
-import time
 
 
 class VoiceTranslator():
 
     def __init__(self) -> None:
         self.FRAMES_PER_BUFFER = 3200
-        self.FORMAT = pyaudio.paInt16
         self.NUMPY_FORMAT = np.int16
         self.MODEL_FORMAT = np.float64
         self.CHANNELS = 1
         self.RATE = 16000
-
-        self.recordings = []
-
-    def record_micro(self, frames):
-        p = pyaudio.PyAudio()
-        stream = p.open(
-            format=self.FORMAT,
-            channels=self.CHANNELS,
-            rate=self.RATE,
-            input=True,
-            frames_per_buffer=self.FRAMES_PER_BUFFER
-        )
-
-        while not frames.empty():
-            data = stream.read(self.FRAMES_PER_BUFFER)
-            self.recordings.append(data)
-
-        stream.stop_stream()
-        stream.close()
-        p.terminate()
 
     def audio_to_file(self):
         obj = wave.open('test_1.wav', 'wb')
@@ -56,11 +32,15 @@ class VoiceTranslator():
         
         return signal_wave, sample_freq
 
-    def audio_to_text(self):
-        if len(self.recordings) <= 0:
+    def audio_to_text(self, sample_rate:int, waveforms=None):
+        if type(waveforms) == None:
             return False, ""
-        input_waves = np.frombuffer(b''.join(self.recordings), dtype=np.int16)
+        
+        input_waves = np.frombuffer(waveforms, dtype=np.int16)
         input_waves = input_waves.astype(np.float64) / np.iinfo(np.int16).max
+
+        if sample_rate != self.RATE:
+            input_waves = librosa.resample(input_waves, orig_sr=sample_rate, target_sr=self.RATE)
 
         processor = WhisperProcessor.from_pretrained("openai/whisper-small")
         model = WhisperForConditionalGeneration.from_pretrained("openai/whisper-small")
@@ -71,23 +51,4 @@ class VoiceTranslator():
         predicted_ids = model.generate(input_features)
         transcription = processor.batch_decode(predicted_ids, skip_special_tokens=True)
 
-        self.recordings = []
         return True, transcription[0]
-    
-if __name__ == '__main__':
-    #micro_to_audio()
-    frames = Queue()
-    frames.put(True)
-
-    voice = VoiceTranslator()
-    print("Start Recording")
-    record = Thread(target=voice.record_micro, args=(frames,))
-    record.start()
-
-    time.sleep(2)
-
-    print("End Recording")
-    frames.get()
-    isSuccessful, text = voice.audio_to_text()
-
-    print(text)

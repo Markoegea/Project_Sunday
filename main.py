@@ -1,6 +1,4 @@
 import gradio as gr
-from queue import Queue
-from threading import Thread
 
 import sunday.voice_to_text as vtt
 import sunday.text_to_function as ttf
@@ -8,41 +6,28 @@ import sunday.function_to_action as fta
 
 voice = vtt.VoiceTranslator()
 
-frames = Queue()
+def display_text(input_audio):
+    sr, audio = input_audio # (int, numpy.ndarray.int16)
 
-button_name = "Record"
+    #gr.Info("Recording In Progress")
 
-def display_text():
-    if frames.empty():
-        frames.put(True)
+    #gr.Info("Recording Stop")
 
-        gr.Info("Recording In Progress")
+    # Using the recording audio, start to translate it
+    isSuccessful, text = voice.audio_to_text(sr, audio)
 
-        # Start a thread that record the waveform audio
-        record = Thread(target=voice.record_micro, args=(frames,))
-        record.start()
+    gr.Info(f"Text: {text}")
 
-        return "Start Recording"
-    else:
-        frames.get()
+    # Usign the text from your recording, get the fuction you request
+    if (isSuccessful):
+        function = ttf.get_function_from_text(text)
 
-        gr.Info("Recording Stop")
+        gr.Info(f"Function: {function}")
 
-        # Using the recording audio, start to translate it
-        isSuccessful, text = voice.audio_to_text()
-
-        gr.Info(f"Text: {text}")
-
-        # Usign the text from your recording, get the fuction you request
-        if (isSuccessful):
-            function = ttf.get_function_from_text(text)
-
-            gr.Info(f"Function: {function}")
-
-            # Then evaluate the function
-            fta.eval_function(function=function)
-        
-        return "Process Complete"
+        # Then evaluate the function
+        fta.eval_function(function=function)
+    
+    return
     
 
 with gr.Blocks() as demo:
@@ -54,9 +39,9 @@ with gr.Blocks() as demo:
             <p>AI assistant that make your life easier, just life friday, but this is sunday.</p>
         </div>
     """)
-    record_btn = gr.Button(button_name)
-    record_btn.click(fn=display_text, inputs=None, outputs=None, api_name="record")
+    input_audio = gr.Audio(sources=['microphone'], label="Input Audio", type="numpy", format="wav")
+    input_audio.stop_recording(fn=display_text, inputs=input_audio, outputs=None, api_name="record")
 
-demo.launch()
+demo.launch(share=True)
 
         
