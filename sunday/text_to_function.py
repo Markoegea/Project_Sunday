@@ -18,7 +18,7 @@ def get_function_from_text(text:str):
     llm = CTransformers(model="TheBloke/gorilla-openfunctions-v1-GGUF",
                         model_file="gorilla-openfunctions-v1.Q4_K_M.gguf",
                         model_type="llama", 
-                        config={'context_length':1000}, # Change the value to your choice
+                        config={'context_length':-1}, # Change the value to your choice
                         gpu_layers=20, # Use 0 if you don't want to use GPU
                         temperature=0.2) # Use the minimum value to avoid the model imagine things
 

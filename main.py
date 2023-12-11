@@ -7,11 +7,9 @@ import sunday.function_to_action as fta
 voice = vtt.VoiceTranslator()
 
 def display_text(input_audio):
+    gr.Info("Recording Stop, processing audio")
+
     sr, audio = input_audio # (int, numpy.ndarray.int16)
-
-    #gr.Info("Recording In Progress")
-
-    #gr.Info("Recording Stop")
 
     # Using the recording audio, start to translate it
     isSuccessful, text = voice.audio_to_text(sr, audio)
@@ -40,7 +38,7 @@ with gr.Blocks() as demo:
         </div>
     """)
     input_audio = gr.Audio(sources=['microphone'], label="Input Audio", type="numpy", format="wav")
-    input_audio.stop_recording(fn=display_text, inputs=input_audio, outputs=None, api_name="record")
+    input_audio.stop_recording(fn=display_text, inputs=input_audio, outputs=None, api_name="stop")
 
 demo.launch(share=True)
 

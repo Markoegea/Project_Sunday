@@ -44,6 +44,8 @@ class VoiceTranslator():
 
         processor = WhisperProcessor.from_pretrained("openai/whisper-small")
         model = WhisperForConditionalGeneration.from_pretrained("openai/whisper-small")
+        model.config.forced_decoder_ids = None
+
         input_features = processor(
         input_waves, sampling_rate=self.RATE, return_tensors="pt"
         ).input_features
