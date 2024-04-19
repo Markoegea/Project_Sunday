@@ -1,0 +1,27 @@
+[
+    {
+        "name": "Create a folder",
+        "api_name": "create_html_folder",
+        "description": "Create a new folder in the system with the given name",
+        "parameters": [
+            {"name": "folder_name", "description": "The name of the folder"}
+        ]
+    },
+    {
+        "name": "Send Whatsapp Message",
+        "api_name": "send_whatsappMsg",
+        "description": "Send a Whatsapp message, given the name of the contact to send the message, and text to send as parameters",
+        "parameters":  [
+            {"name": "contact_name", "description": "The name of the contact that will receive the message"},
+            {"name": "message", "description": "The text that must be send in the message"}
+        ]
+    },
+    {
+        "name": "Print Screen",
+        "api_name": "print_screen",
+        "description": "Print a value in the screen, given this value as a parameter",
+        "parameters":  [
+            {"name": "value", "description": "The value that must be printed in the screen"}
+        ]
+    }
+]

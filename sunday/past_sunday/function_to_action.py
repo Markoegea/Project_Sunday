@@ -1,4 +1,5 @@
 import os
+import pywhatkit
 
 #Your Functions goes here and in the functions.json file
 
@@ -8,6 +9,12 @@ def eval_function(function:str):
 
 def print_screen(value):
     print(value)
+
+def send_whatsappMsg(contact_name:str, message:str):
+    contacts = {'marco': '+573172257110'}
+    contact_number = contacts[contact_name.lower()]
+    pywhatkit.sendwhatmsg_instantly(contact_number, message, 7, True, 3)
+
 
 def create_html_folder(folder_name:str):
     path = "./"+ folder_name
@@ -43,3 +50,4 @@ def create_html_folder(folder_name:str):
 
 if __name__ == '__main__':
     eval_function('print_screen("I love you")')
+    eval_function('send_whatsappMsg(contact_name="MYSELF", message="Test")')
