@@ -10,9 +10,9 @@ class BellMediator(Mediator):
         self.bot = bot
         self.experience = experience
         self.llm = llm
-        self.bot.setMediator(self)
-        self.experience.setMediator(self)
-        self.llm.setMediator(self)
+        if self.bot is not None: self.bot.setMediator(self) 
+        if self.experience is not None: self.experience.setMediator(self)
+        if self.llm is not None: self.llm.setMediator(self)
 
     def experience_new_observation(self, memory_description:str) -> None:
         self.experience.new_observation(memory_description)

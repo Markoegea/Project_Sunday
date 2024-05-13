@@ -2,17 +2,27 @@ import sys, os
 
 sys.path.append(os.path.dirname(__file__))
 
+import re
+
+from llama_cpp import Llama as LlamaPro
+
 from sunday.llm.llm import LLM
 from sunday.mediator.component import Component
 from sunday.mediator.mediator import Mediator
 
-#TODO: Implement model
-#TODO: Test the input
-#model name 1 meta-llama/Meta-Llama-3-8B-Instruct
 class Llama(LLM, Component):
 
     def __init__(self):
         super().__init__()
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "llama-8b-InsQ2K.gguf")
+        # Set gpu_layers to the number of layers to offload to GPU. Set to 0 if no GPU acceleration is available on your system.
+        self.llm:LlamaPro = LlamaPro(
+            model_path=path,  # Download the model file first
+            n_ctx=1024,  # The max sequence length to use - note that longer sequence lengths require much more resources
+            n_threads=8,            # The number of CPU threads to use, tailor to your system and the resulting performance
+            n_gpu_layers=10,       # The number of layers to offload to GPU, if you have GPU acceleration available
+            verbose=False
+        )
         self.mediator = None
 
     def write_importance(self, description: str) -> int:
@@ -26,8 +36,12 @@ class Llama(LLM, Component):
                 f"Memory: {description} Rating:"
             }
         ]
-        print("Write importance:", input)
-        return 8
+        pattern = r'\d+'
+        numbers = re.findall(pattern, self.llm.create_chat_completion(input)["choices"][0]["message"]["content"])
+        if numbers:
+            return int(numbers[0])
+        else:
+            return 1
     
     def write_reflection(self, list_memory: list[str]) -> str:
         statements = " ".join([f'{i}. {memory}' for i, memory in enumerate(list_memory, start=1)])
@@ -36,11 +50,10 @@ class Llama(LLM, Component):
             {
                 "role" : "user",
                 "content" : f"Statements about {self.mediator.bot_name()} {statements} " + 
-                "What 5 high-level insights can you infer from the above statments? (example format: insight (because of 1, 5, 3))"
+                "What 5 high-level insights can you infer from the above statments? (Divide each insights with a dot)"
             }
         ]
-        print("Write reflection:", input)
-        return "Eliza loves the sea. (because 1, 2, 7)"
+        return self.llm.create_chat_completion(input)["choices"][0]["message"]["content"] 
     
     def write_plan(self, list_memory: list[str]) -> str:
         statements = " ".join(list_memory)
@@ -53,8 +66,7 @@ class Llama(LLM, Component):
                 f"Here is {self.mediator.bot_name()} plan today in broad strokes: 1)"
             }
         ]
-        print("Write plan:", input)
-        return input
+        return self.llm.create_chat_completion(input)["choices"][0]["message"]["content"] 
     
     def write_conversation(self, context: str) -> str:
         input = [
@@ -65,8 +77,7 @@ class Llama(LLM, Component):
                 f"Should {self.mediator.bot_name()} react to the interaction, and if so, what would be an appropriate answer?"
             }
         ]
-        print("Write conversation:", input)
-        return input 
-    
+        return self.llm.create_chat_completion(input)["choices"][0]["message"]["content"] 
+
     def setMediator(self, mediator: Mediator) -> None:
         self.mediator = mediator

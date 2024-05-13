@@ -22,4 +22,6 @@ flagged/
 # OS generated files
 .DS_Store
 Thumbs.db
-PyWhatKit_DB.txt
+
+# Llama model
+*.gguf
