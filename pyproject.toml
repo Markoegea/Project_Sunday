@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sunday"
+version = "0.9"
+description = "System Using Neural Development Apis Yield"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "Marco Egea", email = "markoegea@gmail.com"},
+]
+homepage = "https://markoegea.onrender.com/"
+dependencies = [
+    "joblib",
+    "numpy",
+    "scikit-learn",
+    "scipy",
+    "threadpoolctl",
+]
+
+[project.scripts]
+test = "scripts.test"
+main = "scripts.main"
