@@ -17,6 +17,7 @@ class Observations(Memory):
         return Observations(**kwargs)
 
     def __init__(self, description:str, importance:int = 1, creation_at=datetime.now()):
+        """Constructor for Observations class, instantiate the description, importance and creation timestamp"""
         super().__init__()
         self.__creation_at = creation_at
         self.__recent_access = creation_at

@@ -17,6 +17,7 @@ class Planning(Observations):
         return Planning(**kwargs)
 
     def __init__(self, description:str, importance:int = 1, creation_at=datetime.now(), location:str = "", starting_time:datetime = datetime.now(), duration:int = 0) -> None:
+        """Constructor for Planning class, instantiate the description, importance, creation timestamp, location and starting timestamp"""
         super().__init__(description=description, importance=importance, creation_at=creation_at)
         self.__location = location
         self.__starting_time = starting_time

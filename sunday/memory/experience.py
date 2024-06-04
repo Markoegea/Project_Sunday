@@ -17,8 +17,10 @@ from planning.planning import Planning
 from sunday.mediator.component import Component
 
 class Experience(Component):
+    """Class that declare the methods necessary to handle the memory's, update, retrieve, add and remove them"""
 
     def __init__(self, children:list[Memory] = []):
+        """Constructor for Experience class, instantiate the list of memory children, the decay and alpha factor, max importance before reflection, max number of memories to retrieve per query."""
         self.__children:list[Memory] = children
 
         self.__decay = 0.005
@@ -35,6 +37,7 @@ class Experience(Component):
         self.mediator = None
 
     def retrieval(self, description:str) -> list[str]:
+        """Return a list of memories descriptions based on their relevance, recency, and importance"""
         self.__description = description
         self.new_reflection()
 
@@ -53,12 +56,15 @@ class Experience(Component):
         )
 
     def get_children_recency(self, decay):
+        """Return a numpy list of the memories recency"""
         return np.array([[child.calculate_recency(decay)] for child in self.__children])
 
     def get_children_importance(self):
+        """Return a numpy list of the memories importance"""
         return np.array([[child.calculate_importance()] for child in self.__children])
 
     def get_children_relevance(self):
+        """Return a numpy list of the vectorized TF-IDF and linear kernel of all the memories description."""
         description_list = [child.calculate_relevance() for child in self.__children]
         description_list.append(self.__description)
 
@@ -70,10 +76,12 @@ class Experience(Component):
         return np.expand_dims(sim_scores, axis=1)
 
     def append_memory(self, memory:Memory) -> None:
+        """Append a memory to the list and add his importance to the cumulative importance."""
         self.__recent_importance += memory.calculate_importance()
         self.__children.append(memory)
 
     def new_observation(self, description:str) -> None:
+        """Create a new observation instance using a description."""
         observation = Observations.build(
             description=description, 
             importance=self.mediator.llama_write_importance(description)
@@ -81,6 +89,7 @@ class Experience(Component):
         self.append_memory(observation)
 
     def new_reflection(self) -> None:
+        """Create and add a new reflection when the cumulative importance is passed."""
         if self.__recent_importance >= self.__max_importance:
             self.__recent_importance = 0
 
@@ -98,6 +107,7 @@ class Experience(Component):
                 ))
 
     def new_plan(self, agent_summary:list[str]):
+        """Create and add a new plan based on agent summary."""
         #A list of the previous plans
         previous_plan = [plan for plan in self.__children if Planning.belong_to(plan)]
         previous_plan_description = [f'{i}) {plan}' for i, plan in enumerate(self.get_memories_description(previous_plan), start=1)]
@@ -113,6 +123,7 @@ class Experience(Component):
         ))
 
     def get_memories_description(self, memories:list[Memory]= None) -> list[str]:
+        """Return a list of recent memories description's."""
         memories = self.__children if memories == None else memories
         childre_desc = [memory.calculate_relevance() for memory in memories]
         if len(memories) >= self.__max_memory_reflection:
@@ -121,6 +132,7 @@ class Experience(Component):
             return childre_desc
 
     def access_childs(self, indexes) -> list[str]:
+        """Return a list of memories description's based on their indexes"""
         nodes = []
         for index in indexes:
             self.__children[index].calculate_recent_access()

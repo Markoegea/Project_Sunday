@@ -5,8 +5,10 @@ from sunday.memory.experience import Experience
 from sunday.llm.llm import LLM
 
 class BellMediator(Mediator):
+    """Class that declare the methods to communicate the Bot's, LLM's and Memory's between each other."""
 
     def __init__(self, bot:Bot, experience:Experience, llm:LLM) -> None:
+        """Constructor for BellMediator class, save the bot, experience and llm in class variables, and call the setMediator function to assign the mediator."""
         self.bot = bot
         self.experience = experience
         self.llm = llm

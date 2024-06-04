@@ -17,6 +17,7 @@ class Reflection(Observations):
         return Reflection(**kwargs)
 
     def __init__(self, description:str, importance:int = 1, creation_at=datetime.now(), pointers:list[Memory]=[]) -> None:
+        """Constructor for Reflection class, instantiate the description, importance, creation timestamp, pointers for other memories objects"""
         super().__init__(description=description, importance=importance, creation_at=creation_at)
         self.__pointers = pointers
 
