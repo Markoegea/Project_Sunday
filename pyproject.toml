@@ -21,7 +21,7 @@ dependencies = [
     "MarkupSafe",
     "numpy",
     "packaging",
-    "pyproject_hooks"
+    "pyproject_hooks",
     "scikit-learn",
     "scipy",
     "threadpoolctl",
