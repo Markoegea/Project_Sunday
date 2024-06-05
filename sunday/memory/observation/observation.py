@@ -31,7 +31,7 @@ class Observations(Memory):
         return self._recency
 
     def calculate_importance(self):
-        return (self.__importance - self._min_importance) / (self._max_importance - self._min_importance)
+        return (self.__importance - Memory.MIN_IMPORTANCE) / (Memory.MAX_IMPORTANCE - Memory.MIN_IMPORTANCE)
 
     def calculate_relevance(self):
         return self.__description
