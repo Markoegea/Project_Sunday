@@ -74,7 +74,7 @@ class Llama(LLM, Component):
             {
                 "role" : "user",
                 "content" : f"It is {self.datetime.now().strftime('%d/%m/%Y %H:%M:%S')} {context} " +
-                f"Should {self.mediator.bot_name()} react to the interaction, and if so, what would be an appropriate answer?"
+                f"What would be the answer according {self.mediator.bot_name()} personality? {self.mediator.bot_name()}:"
             }
         ]
         return self.llm.create_chat_completion(input)["choices"][0]["message"]["content"] 

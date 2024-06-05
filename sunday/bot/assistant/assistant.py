@@ -35,7 +35,7 @@ class Assistant(Bot, Component):
     def talk(self, petition:str, your_name:str) -> str:
         relation_memories = self.mediator.experience_retrieval(f"What is {self.name}'s relationship with the {your_name}?")
         petition_memories = self.mediator.experience_retrieval(petition)
-        answer = self.mediator.llama_write_conversation(". ".join(relation_memories + petition_memories))
+        answer = self.mediator.llama_write_conversation(f"{your_name}: " + ". ".join(relation_memories + petition_memories) + petition)
         self.mediator.experience_new_observation(answer)
         return answer
     

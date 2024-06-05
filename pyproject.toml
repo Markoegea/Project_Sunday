@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sunday"
-version = "0.9"
+version = "1.0"
 description = "System Using Neural Development Apis Yield"
 readme = "README.md"
 license = {text = "Apache-2.0"}
