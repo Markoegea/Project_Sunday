@@ -14,11 +14,4 @@ setup(
    url="https://markoegea.onrender.com/",
    packages=['sunday'],  #same as name
    install_requires=['joblib', 'numpy', 'scikit-learn', 'scipy', 'threadpoolctl'], #external packages as dependencies
-   scripts=[
-            'test',
-            'main',
-    ]
 )
-
-if __name__ == '__main__':
-    print(long_description)
